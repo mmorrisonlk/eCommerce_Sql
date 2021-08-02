@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     // find a single tag by its `id`
-    const tagData = await Tag.findByPk({
+    const tagData = await Tag.findByPk(req.params.id, {
       // be sure to include its associated Product data 
       include: [{
         model: Product
@@ -68,10 +68,14 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     // delete on tag by its `id` value
-    const destroyTag = await Tag.destroy(req.body);
+    const destroyTag = await Tag.destroy( {
+      where: {
+        id: req.params.id
+      }
+    })
     if (!destroyTag) {
       res.status(404).json({
-        message: "No tag found with this ID"
+        message: "No Tag found with this ID"
       });
     }
     res.json(200).json(destroyTag)
